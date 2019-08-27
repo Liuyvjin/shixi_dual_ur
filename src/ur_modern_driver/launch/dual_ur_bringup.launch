@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<!--
+-->
+<launch>
+        <!-- 是否启用关节限制 -->
+        <arg default="true" name="limited"/>
+        <!-- 驱动器参数 -->
+        <arg default="left_" name="left_prefix"/>
+        <arg default="right_" name="right_prefix"/>
+        <arg default="192.168.1.102" name="left_robot_ip"/>        
+        <arg default="192.168.1.103" name="right_robot_ip"/>
+        <arg default="192.168.1.2" name="reverse_ip"/>
+        <arg default="50001" name="left_reverse_port"/>
+        <arg default="50002" name="right_reverse_port"/>
+
+        <arg default="0.0" name="min_payload"/>
+        <arg default="10.0" name="max_payload"/>  
+        <arg default="false" name="use_ros_control"/>
+        <arg default="false" name="use_lowbandwidth_trajectory_follower"/>
+        <arg default="0.008" name="time_interval"/>
+        <arg default="0.008" name="servoj_time"/>
+        <arg default="0.001" name="servoj_time_waiting"/>
+        <arg default="2.0" name="max_waiting_time"/>
+        <arg default="100." name="servoj_gain"/>
+        <arg default="1." name="servoj_lookahead_time"/>
+        <arg default="0.01" name="max_joint_difference"/>
+        <arg default="true" name="shutdown_on_disconnect"/>
+
+
+        <!-- 加载机器人urdf文件 robot model -->
+        <include file="$(find dual_ur_description)/launch/dual_ur_upload.launch">
+                <arg name="limited" value="$(arg limited)"/>
+        </include>
+
+
+        <!-- 这两个参数不用改 -->
+        <!-- require_activation defines when the service /ur_driver/robot_enable needs to be called. -->
+        <arg default="Never" name="require_activation"/>        <!-- Never, Always, OnStartup -->
+        <!-- 只是在debug时用到的，和实际机器人的速度限制无关-->
+        <arg default="10.0" name="max_velocity"/>   <!-- [rad/s] -->
+
+        <!-- 启动机器人状态发布器 -->
+        <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+
+        <!-- 启动机器人驱动 -->
+        <!-- 左手驱动 -->
+        <node name="left_ur_driver" pkg="ur_modern_driver" type="ur_driver" output="screen">
+                <remap from="/follow_joint_trajectory" to="/left_arm_controller/follow_joint_trajectory" />  
+                <param name="prefix" type="str" value="$(arg left_prefix)" />
+                <param name="robot_ip_address" type="str" value="$(arg left_robot_ip)" />
+                <param name="reverse_ip_address" type="str" value="$(arg reverse_ip)" />
+                <param name="reverse_port" type="int" value="$(arg left_reverse_port)" />
+                <param name="use_ros_control" type="bool" value="$(arg use_ros_control)"/>
+                <param name="use_lowbandwidth_trajectory_follower" type="bool" value="$(arg use_lowbandwidth_trajectory_follower)"/>
+                <param name="min_payload" type="double" value="$(arg min_payload)" />
+                <param name="max_payload" type="double" value="$(arg max_payload)" />
+                <param name="time_interval" type="double" value="$(arg time_interval)" />
+                <param name="servoj_time" type="double" value="$(arg servoj_time)" />
+                <param name="servoj_time_waiting" type="double" value="$(arg servoj_time_waiting)" />
+                <param name="max_waiting_time" type="double" value="$(arg max_waiting_time)" />
+                <param name="servoj_gain" type="double" value="$(arg servoj_gain)" />
+                <param name="servoj_lookahead_time" type="double" value="$(arg servoj_lookahead_time)" />
+                <param name="max_joint_difference" type="double" value="$(arg max_joint_difference)" />
+                <param name="base_frame" type="str" value="$(arg left_prefix)base"/>
+                <param name="tool_frame" type="str" value="$(arg left_prefix)tool0_controller"/>
+                <param name="shutdown_on_disconnect" type="bool" value="$(arg shutdown_on_disconnect)"/>
+                <param name="require_activation" type="str" value="$(arg require_activation)" />
+                <param name="max_velocity" type="double" value="$(arg max_velocity)" />
+        </node>
+        <!--右手驱动 -->
+        <node name="right_ur_driver" pkg="ur_modern_driver" type="ur_driver" output="screen">
+                <remap from="/follow_joint_trajectory" to="/right_arm_controller/follow_joint_trajectory" />  
+                <param name="prefix" type="str" value="$(arg right_prefix)" />
+                <param name="robot_ip_address" type="str" value="$(arg right_robot_ip)" />
+                <param name="reverse_ip_address" type="str" value="$(arg reverse_ip)" />
+                <param name="reverse_port" type="int" value="$(arg right_reverse_port)" />
+                <param name="use_ros_control" type="bool" value="$(arg use_ros_control)"/>
+                <param name="use_lowbandwidth_trajectory_follower" type="bool" value="$(arg use_lowbandwidth_trajectory_follower)"/>
+                <param name="min_payload" type="double" value="$(arg min_payload)" />
+                <param name="max_payload" type="double" value="$(arg max_payload)" />
+                <param name="time_interval" type="double" value="$(arg time_interval)" />
+                <param name="servoj_time" type="double" value="$(arg servoj_time)" />
+                <param name="servoj_time_waiting" type="double" value="$(arg servoj_time_waiting)" />
+                <param name="max_waiting_time" type="double" value="$(arg max_waiting_time)" />
+                <param name="servoj_gain" type="double" value="$(arg servoj_gain)" />
+                <param name="servoj_lookahead_time" type="double" value="$(arg servoj_lookahead_time)" />
+                <param name="max_joint_difference" type="double" value="$(arg max_joint_difference)" />
+                <param name="base_frame" type="str" value="$(arg right_prefix)base"/>
+                <param name="tool_frame" type="str" value="$(arg right_prefix)tool0_controller"/>
+                <param name="shutdown_on_disconnect" type="bool" value="$(arg shutdown_on_disconnect)"/>
+                <param name="require_activation" type="str" value="$(arg require_activation)" />
+                <param name="max_velocity" type="double" value="$(arg max_velocity)" />
+        </node>        
+</launch>
