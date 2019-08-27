@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro"   name="dual_ur" >
+	<!--grey-->
+	<material name="grey">
+ 		<color rgba="0.5 0.5 0.5 1.0"/>
+	</material>
+	<material name="black">
+ 		<color rgba="0.0  0.0  0.0  1.0"/>
+	</material>
+	<!-- prefix of two arms -->
+	<xacro:property name="prefix1" value="left_" />
+  	<xacro:property name="prefix2" value="right_" />
+  	<!-- transmission -->
+ 	 <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
+
+	<!-- common stuff -->
+	<xacro:include filename="$(find dual_ur_description)/urdf/common.gazebo.xacro" />
+
+	<!-- ur10 -->
+	<xacro:include filename="$(find dual_ur_description)/urdf/ur10.urdf.xacro" />
+
+	<!-- arm -->
+	<xacro:ur10_robot prefix="${prefix1}" joint_limited="true"
+	  shoulder_pan_lower_limit="${-pi}" shoulder_pan_upper_limit="${pi}"
+	  shoulder_lift_lower_limit="${-pi}" shoulder_lift_upper_limit="${pi}"
+	  elbow_joint_lower_limit="${-pi}" elbow_joint_upper_limit="${pi}"
+	  wrist_1_lower_limit="${-pi}" wrist_1_upper_limit="${pi}"
+	  wrist_2_lower_limit="${-pi}" wrist_2_upper_limit="${pi}"
+	  wrist_3_lower_limit="${-pi}" wrist_3_upper_limit="${pi}"
+	  transmission_hw_interface="$(arg transmission_hw_interface)"
+	/>
+
+	<xacro:ur10_robot prefix="${prefix2}" joint_limited="true"
+	  shoulder_pan_lower_limit="${-pi}" shoulder_pan_upper_limit="${pi}"
+	  shoulder_lift_lower_limit="${-pi}" shoulder_lift_upper_limit="${pi}"
+	  elbow_joint_lower_limit="${-pi}" elbow_joint_upper_limit="${pi}"
+	  wrist_1_lower_limit="${-pi}" wrist_1_upper_limit="${pi}"
+	  wrist_2_lower_limit="${-pi}" wrist_2_upper_limit="${pi}"
+	  wrist_3_lower_limit="${-pi}" wrist_3_upper_limit="${pi}"
+	  transmission_hw_interface="$(arg transmission_hw_interface)"
+	/>
+
+	<link name="world" />
+
+	<joint name="${prefix1}world_joint" type="fixed">
+		<parent link="world" />
+		<child link = "${prefix1}base_link" />
+		<origin xyz="0.0 0.0 0.70" rpy="0.0 0.0 0.0" />
+	</joint>
+
+	<joint name="${prefix2}world_joint" type="fixed">
+		<parent link="world" />
+		<child link = "${prefix2}base_link" />
+		<origin xyz="-0.00640616 1.95586 0.70" rpy="-3.13636 3.11726 0.00817339" />
+	</joint>
+	<!-- add tool and jizuo -->
+	<link name="${prefix1}jizuo">
+		<visual>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<geometry>
+				<mesh filename="package://dual_ur_description/meshes/dizuo.STL"/>
+			</geometry>
+			<material name="grey"/>
+		</visual>
+		<collision>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<geometry>
+				<mesh filename="package://dual_ur_description/meshes/dizuo.STL"/>
+			</geometry>
+		</collision>
+	</link>
+	<joint name="${prefix1}jizuo_to_world" type="fixed">
+		<parent link="${prefix1}base_link"/>
+		<child link="${prefix1}jizuo"/>
+		<origin rpy="0 0 0.7854" xyz="0 0 0"/>
+	</joint>
+	<link name="${prefix2}jizuo">
+		<visual>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<geometry>
+				<mesh filename="package://dual_ur_description/meshes/dizuo.STL"/>
+			</geometry>
+			<material name="grey"/>
+		</visual>
+		<collision>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<geometry>
+				<mesh filename="package://dual_ur_description/meshes/dizuo.STL"/>
+			</geometry>
+		</collision>
+	</link>
+	<joint name="${prefix2}jizuo_to_world" type="fixed">
+		<parent link="${prefix2}base_link"/>
+		<child link="${prefix2}jizuo"/>
+		<origin rpy="0 0 0.7854" xyz="0 0 0"/>
+	</joint>
+	<link name="${prefix1}tooling">
+		<visual>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<geometry>
+				<mesh filename="package://dual_ur_description/meshes/tooling.STL"/>
+			</geometry>
+			<material name="grey"/>
+		</visual>
+		<collision>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<geometry>
+				<mesh filename="package://dual_ur_description/meshes/tooling.STL"/>
+			</geometry>
+		</collision>
+	</link>
+	<joint name="${prefix1}tooling_to_tool0" type="fixed">
+		<parent link="${prefix1}tool0"/>
+		<child link="${prefix1}tooling"/>
+		<origin rpy="0 0 0" xyz="0 0 0"/>
+	</joint>
+	<link name="${prefix2}gocator">
+		<visual>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<geometry>
+				<mesh filename="package://dual_ur_description/meshes/gocator.STL"/>
+			</geometry>
+			<material name="black"/>
+		</visual>
+		<collision>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<geometry>
+				<mesh filename="package://dual_ur_description/meshes/gocator.STL"/>
+			</geometry>
+		</collision>
+	</link>
+	<joint name="${prefix2}gocator_to_tool0" type="fixed">
+		<parent link="${prefix2}tool0"/>
+		<child link="${prefix2}gocator"/>
+		<origin rpy="0 0 0" xyz="0 0 0"/>
+	</joint>
+</robot>

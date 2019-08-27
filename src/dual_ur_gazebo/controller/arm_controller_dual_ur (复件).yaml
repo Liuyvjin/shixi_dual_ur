@@ -1,0 +1,49 @@
+arm_controller:
+  type: position_controllers/JointTrajectoryController
+  joints:
+     - left_shoulder_pan_joint
+     - left_shoulder_lift_joint
+     - left_elbow_joint
+     - left_wrist_1_joint
+     - left_wrist_2_joint
+     - left_wrist_3_joint
+     - right_shoulder_pan_joint
+     - right_shoulder_lift_joint
+     - right_elbow_joint
+     - right_wrist_1_joint
+     - right_wrist_2_joint
+     - right_wrist_3_joint
+  constraints:
+      goal_time: 0.6
+      stopped_velocity_tolerance: 0.05
+      left_shoulder_pan_joint: {trajectory: 0.1, goal: 0.1}
+      left_shoulder_lift_joint: {trajectory: 0.1, goal: 0.1}
+      left_elbow_joint: {trajectory: 0.1, goal: 0.1}
+      left_wrist_1_joint: {trajectory: 0.1, goal: 0.1}
+      left_wrist_2_joint: {trajectory: 0.1, goal: 0.1}
+      left_wrist_3_joint: {trajectory: 0.1, goal: 0.1}
+      right_shoulder_pan_joint: {trajectory: 0.1, goal: 0.1}
+      right_shoulder_lift_joint: {trajectory: 0.1, goal: 0.1}
+      right_elbow_joint: {trajectory: 0.1, goal: 0.1}
+      right_wrist_1_joint: {trajectory: 0.1, goal: 0.1}
+      right_wrist_2_joint: {trajectory: 0.1, goal: 0.1}
+      right_wrist_3_joint: {trajectory: 0.1, goal: 0.1}
+  stop_trajectory_duration: 0.5
+  state_publish_rate:  25
+  action_monitor_rate: 10
+joint_group_position_controller:
+  type: position_controllers/JointGroupPositionController
+  joints:
+     - left_shoulder_pan_joint
+     - left_shoulder_lift_joint
+     - left_elbow_joint
+     - left_wrist_1_joint
+     - left_wrist_2_joint
+     - left_wrist_3_joint
+     - right_shoulder_pan_joint
+     - right_shoulder_lift_joint
+     - right_elbow_joint
+     - right_wrist_1_joint
+     - right_wrist_2_joint
+     - right_wrist_3_joint
+
